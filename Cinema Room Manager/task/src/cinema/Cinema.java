@@ -6,27 +6,67 @@ import java.util.Scanner;
 public class Cinema {
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
+
+        // Get the cinema size from the user
         System.out.println("Enter the number of rows:");
-        int row = scanner.nextInt();
+        int numberOfRows = scanner.nextInt();
         System.out.println("Enter the number of seats in each row:");
-        int seat = scanner.nextInt();
+        int numberOfSeats = scanner.nextInt();
 
-        printCinema2(row, seat);
-        System.out.println("Enter a row number:");
-        int choosenRow = scanner.nextInt();
-        System.out.println("Enter a seat number in that row:");
-        int choosenSeat = scanner.nextInt();
+        // Build and Print the initial cinema
+        String[][] cinema = setupCinema(numberOfRows, numberOfSeats);
+        printCinema(cinema);
 
-
+        // Get the chosen Seat and row
         System.out.println();
+        System.out.println("Enter a row number:");
+        int chosenRow = scanner.nextInt();
+        System.out.println("Enter a seat number in that row:");
+        int chosenSeat = scanner.nextInt();
 
-        // printIncome(row, seat);
-        // printCinema();
+        //Print ticket Price
+        int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
+        System.out.println(price);
+
+        // Print the updated cinema
+        String[][] updatedCinema = updateSeat(chosenSeat, chosenRow, cinema);
+        printCinema(updatedCinema);
+        System.out.println();
     }
 
-    private static void printCinema2(int row, int seat) {
+    private static int priceCalculator(int numberOfRows, int numberOfSeats, int chosenRow) {
+        int cinemaSize = numberOfSeats * numberOfRows;
+        int seatPrice;
+        if (cinemaSize < 60) {
+            seatPrice = 10;
+        } else if (chosenRow > (numberOfRows / 2)) {
+            seatPrice = 8;
+        } else {
+            seatPrice = 10;
+        }
+        return seatPrice;
+    }
+
+
+    private static void printCinema(String[][] cinema) {
+        System.out.print("Cinema:");
+        for (String[] rows : cinema) {
+            System.out.println();
+            for (String s : rows) {
+                System.out.print(s);
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+    }
+
+    private static String[][] updateSeat(int choosenSeat, int choosenRow, String[][] cinema) {
+        cinema[choosenSeat][choosenRow] = "B";
+        return cinema;
+    }
+
+    private static String[][] setupCinema(int row, int seat) {
         // Create the Cinema
         String[][] cinema2dimArray = new String[row + 1][seat + 1];
         cinema2dimArray[0][0] = " ";
@@ -37,50 +77,6 @@ public class Cinema {
         for (int i = 1; i < seat + 1; i++) {
             cinema2dimArray[0][i] = String.valueOf(i);
         }
-        for (String[] rows : cinema2dimArray) {
-            System.out.println();
-            for (String s : rows) {
-                System.out.print(s);
-                System.out.print(" ");
-            }
-        }
-    }
-
-    private static void printCinema(int row, int seats) {
-        System.out.println("Cinema:");
-        System.out.print("  ");
-        for (int i = 1; i < 9; i++) {
-            System.out.print(i);
-            System.out.print(" ");
-        }
-        System.out.println();
-        for (int i = 1; i < 8; i++) {
-            System.out.print(i);
-            System.out.print(" ");
-            for (int j = 0; j < 8; j++) {
-                System.out.print("S");
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-    }
-
-    private static void printIncome(int row, int seat) {
-        System.out.println("Total income:");
-        int result = seat * row;
-        int seatPrice = 0;
-        if (result < 60) {
-            seatPrice = 10;
-            result = result * seatPrice;
-        } else {
-            int fullPrice = seat * ((row / 2) * 10);
-            int reducedPrice = seat * ((row / 2) * 8);
-            if (row % 2 != 0) {
-                reducedPrice = seat * (((row / 2) + 1) * 8);
-            }
-            result = fullPrice + reducedPrice;
-        }
-        System.out.print("$");
-        System.out.print(result);
+        return cinema2dimArray;
     }
 }
