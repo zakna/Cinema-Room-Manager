@@ -25,14 +25,15 @@ public class Cinema {
         System.out.println("Enter a seat number in that row:");
         int chosenSeat = scanner.nextInt();
 
-        //Print ticket Price
+        // Print ticket Price
         int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
+        System.out.print("Ticket price: $");
         System.out.println(price);
+        System.out.println();
 
         // Print the updated cinema
         String[][] updatedCinema = updateSeat(chosenSeat, chosenRow, cinema);
         printCinema(updatedCinema);
-        System.out.println();
     }
 
     private static int priceCalculator(int numberOfRows, int numberOfSeats, int chosenRow) {
