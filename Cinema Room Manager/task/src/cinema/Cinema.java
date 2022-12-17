@@ -63,7 +63,7 @@ public class Cinema {
     }
 
     private static String[][] updateSeat(int choosenSeat, int choosenRow, String[][] cinema) {
-        cinema[choosenSeat][choosenRow] = "B";
+        cinema[choosenRow][choosenSeat] = "B";
         return cinema;
     }
 
