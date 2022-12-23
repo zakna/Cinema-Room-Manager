@@ -14,26 +14,40 @@ public class Cinema {
         System.out.println("Enter the number of seats in each row:");
         int numberOfSeats = scanner.nextInt();
 
-        // Build and Print the initial cinema
+        // Build cinema
         String[][] cinema = setupCinema(numberOfRows, numberOfSeats);
-        printCinema(cinema);
+        boolean exitMenu = false;
+        while (!exitMenu) {
+            printMenu();
+            int choice = scanner.nextInt();
+            if (choice == 1) {
+                // Print the cinema
+                printCinema(cinema);
+                System.out.println();
 
-        // Get the chosen Seat and row
-        System.out.println();
-        System.out.println("Enter a row number:");
-        int chosenRow = scanner.nextInt();
-        System.out.println("Enter a seat number in that row:");
-        int chosenSeat = scanner.nextInt();
+            } else if (choice == 2) {
+                // Get the chosen seat and row
+                System.out.println("Enter a row number:");
+                int chosenRow = scanner.nextInt();
+                System.out.println("Enter a seat number in that row:");
+                int chosenSeat = scanner.nextInt();
 
-        // Print ticket Price
-        int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
-        System.out.print("Ticket price: $");
-        System.out.println(price);
-        System.out.println();
+                // Print ticket price
+                int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
+                System.out.print("Ticket price: $");
+                System.out.println(price);
+                System.out.println();
+                updateSeat(chosenSeat, chosenRow, cinema);
+            } else if (choice == 0) {
+                exitMenu = true;
+            }
+        }
+    }
 
-        // Print the updated cinema
-        String[][] updatedCinema = updateSeat(chosenSeat, chosenRow, cinema);
-        printCinema(updatedCinema);
+    private static void printMenu() {
+        System.out.println("1. Show the seats");
+        System.out.println("2. Buy a ticket");
+        System.out.println("0. Exit");
     }
 
     private static int priceCalculator(int numberOfRows, int numberOfSeats, int chosenRow) {
@@ -49,7 +63,6 @@ public class Cinema {
         return seatPrice;
     }
 
-
     private static void printCinema(String[][] cinema) {
         System.out.print("Cinema:");
         for (String[] rows : cinema) {
@@ -62,9 +75,8 @@ public class Cinema {
         System.out.println();
     }
 
-    private static String[][] updateSeat(int choosenSeat, int choosenRow, String[][] cinema) {
+    private static void updateSeat(int choosenSeat, int choosenRow, String[][] cinema) {
         cinema[choosenRow][choosenSeat] = "B";
-        return cinema;
     }
 
     private static String[][] setupCinema(int row, int seat) {
