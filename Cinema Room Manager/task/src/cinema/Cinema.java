@@ -1,31 +1,45 @@
 package cinema;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Cinema {
+    private static int purchasedTicket;
+    private static int currentIncome;
+    private static int potentialTotalIncome;
+    private static int cinemaSize;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Get the cinema size from the user
+        // Get the cinema size
         System.out.println("Enter the number of rows:");
         int numberOfRows = scanner.nextInt();
         System.out.println("Enter the number of seats in each row:");
         int numberOfSeats = scanner.nextInt();
 
+        // Initialise number of seats
+        cinemaSize = numberOfRows * numberOfSeats;
+        potentialTotalIncome = getPotentialTotalIncome(numberOfRows, numberOfSeats);
+
         // Build cinema
         String[][] cinema = setupCinema(numberOfRows, numberOfSeats);
+
         boolean exitMenu = false;
+        // Enter main program menu
         while (!exitMenu) {
             printMenu();
             int choice = scanner.nextInt();
+
+            // Todo: refactor to a switch statement
             if (choice == 1) {
+
                 // Print the cinema
                 printCinema(cinema);
                 System.out.println();
-
             } else if (choice == 2) {
+
                 // Get the chosen seat and row
                 System.out.println("Enter a row number:");
                 int chosenRow = scanner.nextInt();
@@ -37,16 +51,56 @@ public class Cinema {
                 System.out.print("Ticket price: $");
                 System.out.println(price);
                 System.out.println();
+                updateCurrentIncome(price);
                 updateSeat(chosenSeat, chosenRow, cinema);
+                purchasedTicket += 1;
+            } else if (choice == 3) {
+
+                // Statistics
+                printStatistics();
             } else if (choice == 0) {
                 exitMenu = true;
             }
         }
     }
+    private static int getPotentialTotalIncome(int rows, int seats) {
+        int seatPrice;
+        int potentialIncome;
+        if (cinemaSize < 60) {
+            seatPrice = 10;
+            potentialIncome = seatPrice * cinemaSize;
+        } else {
+            int fullPrice = seats * ((rows / 2) * 10);
+            int reducedPrice = seats * ((rows / 2) * 8);
+            // if rows are uneven skew round towards the reducedPrise
+            if (rows % 2 != 0) {
+                reducedPrice = seats * (((rows / 2) + 1) * 8);
+            }
+            potentialIncome = fullPrice + reducedPrice;
+        }
+        return potentialIncome;
+    }
+
+    private static void updateCurrentIncome(int price) {
+        currentIncome += price;
+    }
+
+    private static void printStatistics() {
+        System.out.println(purchasedTicket);
+        double percentage = (purchasedTicket / (double) cinemaSize) * 100;
+        // Print operations
+        System.out.printf("Percentage: %.2f", percentage);
+        System.out.println("%");
+        System.out.print("Current income: $");
+        System.out.println(currentIncome);
+        System.out.print("Total income: $");
+        System.out.println(potentialTotalIncome);
+    }
 
     private static void printMenu() {
         System.out.println("1. Show the seats");
         System.out.println("2. Buy a ticket");
+        System.out.println("3. Statistics");
         System.out.println("0. Exit");
     }
 
@@ -75,21 +129,21 @@ public class Cinema {
         System.out.println();
     }
 
-    private static void updateSeat(int choosenSeat, int choosenRow, String[][] cinema) {
-        cinema[choosenRow][choosenSeat] = "B";
+    private static void updateSeat(int chosenSeat, int chosenRow, String[][] cinema) {
+        cinema[chosenRow][chosenSeat] = "B";
     }
 
     private static String[][] setupCinema(int row, int seat) {
         // Create the Cinema
-        String[][] cinema2dimArray = new String[row + 1][seat + 1];
-        cinema2dimArray[0][0] = " ";
+        String[][] cinema = new String[row + 1][seat + 1];
+        cinema[0][0] = " ";
         for (int i = 1; i < row + 1; i++) {
-            Arrays.fill(cinema2dimArray[i], "S");
-            cinema2dimArray[i][0] = String.valueOf(i);
+            Arrays.fill(cinema[i], "S");
+            cinema[i][0] = String.valueOf(i);
         }
         for (int i = 1; i < seat + 1; i++) {
-            cinema2dimArray[0][i] = String.valueOf(i);
+            cinema[0][i] = String.valueOf(i);
         }
-        return cinema2dimArray;
+        return cinema;
     }
 }
