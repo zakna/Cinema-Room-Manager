@@ -1,6 +1,5 @@
 package cinema;
 
-import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -39,21 +38,36 @@ public class Cinema {
                 printCinema(cinema);
                 System.out.println();
             } else if (choice == 2) {
+                boolean isBuyingTicket = true;
+                while (isBuyingTicket) {
+                    // Get the chosen seat and row
+                    System.out.println("Enter a row number:");
+                    int chosenRow = scanner.nextInt();
+                    System.out.println("Enter a seat number in that row:");
+                    int chosenSeat = scanner.nextInt();
 
-                // Get the chosen seat and row
-                System.out.println("Enter a row number:");
-                int chosenRow = scanner.nextInt();
-                System.out.println("Enter a seat number in that row:");
-                int chosenSeat = scanner.nextInt();
-
-                // Print ticket price
-                int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
-                System.out.print("Ticket price: $");
-                System.out.println(price);
-                System.out.println();
-                updateCurrentIncome(price);
-                updateSeat(chosenSeat, chosenRow, cinema);
-                purchasedTicket += 1;
+                    if (chosenRow < 0
+                            || chosenSeat < 0
+                            || chosenRow > cinema.length - 1
+                            || chosenSeat > cinema[chosenRow].length - 1
+                    ) {
+                        System.out.println("Wrong input!");
+                    }
+                    // Checking if the seat is available
+                    else if (isSeatTaken(chosenSeat, chosenRow, cinema)) {
+                        System.out.println("That ticket has already been purchased!");
+                    } else {
+                        // Print ticket price
+                        int price = priceCalculator(numberOfRows, numberOfSeats, chosenRow);
+                        System.out.print("Ticket price: $");
+                        System.out.println(price);
+                        System.out.println();
+                        updateCurrentIncome(price);
+                        updateSeat(chosenSeat, chosenRow, cinema);
+                        purchasedTicket += 1;
+                        isBuyingTicket = false;
+                    }
+                }
             } else if (choice == 3) {
 
                 // Statistics
@@ -62,7 +76,9 @@ public class Cinema {
                 exitMenu = true;
             }
         }
+
     }
+
     private static int getPotentialTotalIncome(int rows, int seats) {
         int seatPrice;
         int potentialIncome;
@@ -86,6 +102,7 @@ public class Cinema {
     }
 
     private static void printStatistics() {
+        System.out.print("Number of purchased tickets: ");
         System.out.println(purchasedTicket);
         double percentage = (purchasedTicket / (double) cinemaSize) * 100;
         // Print operations
@@ -131,6 +148,10 @@ public class Cinema {
 
     private static void updateSeat(int chosenSeat, int chosenRow, String[][] cinema) {
         cinema[chosenRow][chosenSeat] = "B";
+    }
+
+    private static boolean isSeatTaken(int chosenSeat, int chosenRow, String[][] cinema) {
+        return cinema[chosenRow][chosenSeat].equals("B");
     }
 
     private static String[][] setupCinema(int row, int seat) {
